@@ -77,22 +77,15 @@ contract itself rejected the attestation, the error carries its number as
 The error `code` and message text are unchanged, so existing callers keep
 working.
 
-### Added — Gate check: balance covers amount, fee and minimum reserve (2026-09-25)
+### Added — Gate check: balance covers amount, fee and minimum reserve (#151) (2026-09-25)
 
-Added `balanceCheck(inspector, signerPublicKey, opts?)` GateCheck (name
-`chain.balance`) in `@corridor/stellar`:
+Added `balanceCheck(inspector, signerPublicKey, opts?)` GateCheck (name `chain.balance`) in `@corridor/stellar`:
 
-- Minimum reserve = `(2 + subentry_count + num_sponsoring − num_sponsored) ×
-base_reserve`, computed strictly with `@corridor/types` decimal money helpers,
-  never floats.
-- Exposes `fee` from `StellarSettlementSubmitter` rather than duplicating
-  `BASE_FEE`.
-- Refuses before signing unless bridge asset balance − selling liabilities ≥
-  amount, and XLM balance − selling liabilities − minimum reserve ≥ fee (plus
-  amount when bridge asset is XLM).
+- Minimum reserve = `(2 + subentry_count + num_sponsoring − num_sponsored) × base_reserve`, computed strictly with `@corridor/types` decimal money helpers, never floats.
+- Exposes `fee` from `StellarSettlementSubmitter` rather than duplicating `BASE_FEE`.
+- Refuses before signing unless bridge asset balance − selling liabilities ≥ amount, and XLM balance − selling liabilities − minimum reserve ≥ fee (plus amount when bridge asset is XLM).
 - Reports `PRESETTLE_INSUFFICIENT_FUNDS` with required vs available in `detail`.
-- Added `AccountInspector` read-only Horizon inspector and typed account facts
-  in `@corridor/stellar`.
+- Added `AccountInspector` read-only Horizon inspector and typed account facts in `@corridor/stellar`.
 
 ### Security — soroban-sdk 25 → 27 clears GHSA-x57h-xx53-v53w (2026-08-31)
 
@@ -332,10 +325,11 @@ regression test (`tests/stellar.test.ts`, `tests/engine.test.ts`,
   trailing newline broke `pnpm lint` for anyone who ran the contract tests
   first.
 - Bumped `typescript-eslint` and `tsup` to clear their patched advisories
-  (brace-expansion DoS, esbuild dev-server file read). `vitest` and `eslint`
-  carry the remaining dev-only advisories but need a major-version bump
-  (2→5, 9→10) to clear — deferred as a separate, deliberate upgrade;
-  `pnpm audit --prod` is clean and none of these ship in a built artifact.
+  (brace-expansion DoS, esbuild dev-server file read). At the time, `vitest`
+  and `eslint` carried the remaining dev-only advisories and needed major-
+  version bumps (2→5, 9→10) to clear them; those upgrades were deferred as
+  separate, deliberate work. `pnpm audit --prod` was clean, and none of those
+  dependencies shipped in a built artifact.
 
 ### Fixed — correctness & security
 
@@ -460,7 +454,7 @@ CONFLICT DO NOTHING` in Postgres) implemented by both stores, plus regression
 - `nightly-live-anchor.yml`: re-runs the opt-in live-anchor integration test
   on a schedule; inert until anchor secrets are configured.
 - `docs/grant-proposal.md`: SCF Tier-2 draft with milestones mapped to
-  ROADMAP.md/MAINTAINER.md; budget figures left as explicit placeholders.
+  ROADMAP.md; budget figures left as explicit placeholders.
 - `@corridor/cli` is now npm-publish-ready: a `tsup` build step bundles it to
   a single `dist/index.js` (inlining `@corridor/manifest`/`@corridor/types`;
   `zod`/`yaml` stay real external dependencies), plus `bin`/`files`/
@@ -583,7 +577,7 @@ CONFLICT DO NOTHING` in Postgres) implemented by both stores, plus regression
   for failures known to have happened before money moved; `recovering` is
   terminal and cannot.
 
-## [0.1.0] — 2026-06-18
+## 0.1.0 — 2026-06-18
 
 Initial public release: the walking skeleton.
 
@@ -606,5 +600,4 @@ Initial public release: the walking skeleton.
 - Reference, MX/Bitso, and NG→CN corridor manifests.
 - Docs: key management, "why not Anchor Platform".
 
-[Unreleased]: https://github.com/ezedike-evan/corridor-in-a-box/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/ezedike-evan/corridor-in-a-box/releases/tag/v0.1.0
+[Unreleased]: https://github.com/ezedike-evan/corridor-in-a-box/commits/main
