@@ -79,6 +79,7 @@ run is automated by `pnpm verify:corridor` and the `reference-corridor` workflow
    That command exits non-zero and names the failing check, so it can gate CI.
    Run it after `up` and before driving a payment; `plan` cannot replace it for a
    self-hosted stack.
+
 5. **Drive one payment** with the real implementations wired per the README's
    "Going live" list (`Sep31Adapter` + `StellarSettlementSubmitter` +
    `PostgresIdempotencyStore`, with an `audit` sink). Capture the resulting

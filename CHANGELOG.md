@@ -23,6 +23,7 @@ RUNNABLE` (all required endpoint fields are present), and that it is **not**
 `✓ VERIFIED` (a localhost manifest reporting verified would be the lie to catch).
 The live readiness check — containers up, SEP-31 receiving, observer cursor in range
 — is `reference-anchor.sh doctor`, and the step now points there explicitly.
+
 ### Changed — anchor-side terminal failure after settle enters `refund_pending`
 
 - Under `rollback: refund_sender`, when money has moved and the anchor reports a
@@ -82,7 +83,7 @@ Added `balanceCheck(inspector, signerPublicKey, opts?)` GateCheck (name
 `chain.balance`) in `@corridor/stellar`:
 
 - Minimum reserve = `(2 + subentry_count + num_sponsoring − num_sponsored) ×
-  base_reserve`, computed strictly with `@corridor/types` decimal money helpers,
+base_reserve`, computed strictly with `@corridor/types` decimal money helpers,
   never floats.
 - Exposes `fee` from `StellarSettlementSubmitter` rather than duplicating
   `BASE_FEE`.
