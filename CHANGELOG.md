@@ -23,6 +23,32 @@ RUNNABLE` (all required endpoint fields are present), and that it is **not**
 `✓ VERIFIED` (a localhost manifest reporting verified would be the lie to catch).
 The live readiness check — containers up, SEP-31 receiving, observer cursor in range
 — is `reference-anchor.sh doctor`, and the step now points there explicitly.
+### Changed — anchor-side terminal failure after settle enters `refund_pending`
+
+- Under `rollback: refund_sender`, when money has moved and the anchor reports a
+  terminal failure, the run now goes `recovering -> refund_pending` and waits for
+  the anchor's refund report instead of calling `submitter.refund` (which the real
+  submitter always refuses). `reconcileUntil` now carries the terminal
+  `TransactionStatus` on the error's `cause` (`anchorTerminalStatus()`). Timeouts,
+  stalls, the no-hash path and the `hold` / `manual` policies are unchanged.
+
+### Added — per-corridor reconcile cadence
+
+- Manifests can set `recovery.reconcile: { poll_seconds?, stall_polls? }`
+  (`stall_polls: 0` disables stall detection). Resolution order is manifest,
+  then `EngineDeps.reconcilePollMs` / `stallThreshold`, then 2s / 10 polls; it
+  applies to resumed runs too. `liveness()` warns when
+  `poll_seconds x stall_polls` is not below `timeout_seconds`.
+
+### Added — `source.protocol` declares how the sending side is reached (#182)
+
+`source` now takes an optional `protocol`: `prefunded` (default; the operator
+already holds the bridge asset, needs only `name`/`asset`), `sep6` (requires
+`endpoints.transfer_server`), `sep24` (requires `endpoints.transfer_server_sep24`
+and `endpoints.web_auth`), or `custom:<id>` (requires `endpoints.base_url`).
+Schema only; the engine does not act on it yet. Manifests that omit `protocol`
+parse as `prefunded`, so existing corridors are unchanged. `corridor plan` now
+prints the source protocol.
 
 ### Maintenance — ESLint 10 landed
 
